@@ -1,0 +1,43 @@
+<html>
+<head>
+    <title>iVideo Test</title>
+
+    <style>
+        #myVideo {
+            width: 100%;
+        }
+        
+        h1 {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 align='center'>iVideo</h1>
+    <hr>
+    <video id='myVideo' src='rockemSockem.mp4'></video>
+    <button onclick='playVid()'>Play</button>
+</body>
+<script>
+    var vid = document.getElementById('myVideo');
+    vid.ontimeupdate = function() { fireQuestion(); }
+   
+
+    function playVid() {
+        vid.play();
+    }
+
+     function fireQuestion(){
+        var time = Math.floor(vid.currentTime); 
+        console.log(time);
+        if (time == 10) {
+            vid.pause();
+            alert("This is a question");
+            vid.currentTime = 11;
+            playVid();
+        }
+    }
+
+</script>
+</html>
