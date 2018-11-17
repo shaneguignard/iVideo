@@ -10,34 +10,106 @@
         h1 {
             font-family: sans-serif;
         }
+        
+        #progress {
+            width: 100%;
+            background: lightgrey;
+            margin-top: 5px;
+        }
+        
+        #bar {
+            height: 20px;
+            width: 1%;
+            background: green;
+        }
+        
+        #myControls {
+            text-align: center;
+        }
+        
+        #questionBox {
+            border: 1px solid black;
+            position: absolute;
+            top: 100px;
+            background: white;
+            width: 80%;
+            display: none;
+            padding: 10px;
+        }
+        
+        button {
+            padding: 10px;
+            margin: 20px;
+            width: 120px;
+        }
+        
     </style>
 </head>
 
 <body>
-    <h1 align='center'>iVideo</h1>
+    <h1 align='center'>iVideo Project</h1>
     <hr>
     <video id='myVideo' src='rockemSockem.mp4'></video>
-    <button onclick='playVid()'>Play</button>
+    <div id='questionBox' align='center'>
+            <h2>Question 1</h2>
+            <h4>Which robot won the last round?</h4>
+            <input type='radio' id='a' name='q'>Red <br>
+            <input type='radio' id='b' name='q'>Blue <br>
+            <button onclick="q1()">Submit</button>
+    </div>
+    Progress
+    <div id='progress'>
+        <div id='bar'></div>
+    </div>
+    <div id='myControls'>
+        <button id='playButton' onclick='playVid()'>Start</button>
+        <button id='pauseButton' onclick='vid.pause();'>Pause</button>
+    </div>
 </body>
 <script>
+    var q = document.getElementById('questionBox');
     var vid = document.getElementById('myVideo');
-    vid.ontimeupdate = function() { fireQuestion(); }
-   
+    vid.ontimeupdate = function() {
+        fireQuestion();
+        progress(vid.currentTime / vid.duration);
+    }
+    window.onload = function() {
+        vid.controls = false;
+    }
+
 
     function playVid() {
+        q.style.display = 'none';
         vid.play();
     }
 
-     function fireQuestion(){
-        var time = Math.floor(vid.currentTime); 
+    function fireQuestion() {
+        var time = Math.floor(vid.currentTime);
         console.log(time);
         if (time == 10) {
             vid.pause();
-            alert("This is a question");
+            q.style.display='block';
             vid.currentTime = 11;
+        }
+        if (time == 46) {
+            vid.pause();
+            alert("This is a question");
+            vid.currentTime = 47;
             playVid();
         }
     }
 
+    function progress(complete) {
+        var bar = document.getElementById('bar');
+        bar.style.width = (complete * 100) + "%";
+
+    }
+    function q1(answer){
+        var answer = document.getElementById('b').checked;
+        console.log(answer);
+        if(answer){playVid();}
+        else{alert("Incorrect, Please try again.")}
+    }
+    
 </script>
 </html>
