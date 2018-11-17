@@ -31,10 +31,20 @@
             border: 1px solid black;
             position: absolute;
             top: 100px;
+            margin-left: 50%;
+            left: -25%;
             background: white;
-            width: 80%;
+            width: 50%;
             display: none;
-            padding: 10px;
+            padding: 20px;
+        }
+        
+        #choices{
+            text-align: left;
+        }
+        input {
+            display: inline;
+            padding:10px;
         }
         
         button {
@@ -42,7 +52,6 @@
             margin: 20px;
             width: 120px;
         }
-        
     </style>
 </head>
 
@@ -51,24 +60,27 @@
     <hr>
     <video id='myVideo' src='rockemSockem.mp4'></video>
     <div id='questionBox' align='center'>
-            <h2>Question 1</h2>
-            <h4>Which robot won the last round?</h4>
-            <input type='radio' id='a' name='q'>Red <br>
-            <input type='radio' id='b' name='q'>Blue <br>
-            <button onclick="q1()">Submit</button>
+        <h2 id='qTitle'></h2>
+        <h4 id='qQuestion'></h4>
+        <div id='choices'></div>
+        <button id='submit'>Submit</button>
     </div>
     Progress
     <div id='progress'>
         <div id='bar'></div>
     </div>
     <div id='myControls'>
-        <button id='playButton' onclick='playVid()'>Start</button>
+        <button id='playButton' onclick='playVid();'>Start</button>
         <button id='pauseButton' onclick='vid.pause();'>Pause</button>
     </div>
 </body>
 <script>
     var q = document.getElementById('questionBox');
     var vid = document.getElementById('myVideo');
+    var qTitle = document.getElementById('qTitle');
+    var qQuestion = document.getElementById('qQuestion');
+    var submit = document.getElementById('submit');
+
     vid.ontimeupdate = function() {
         fireQuestion();
         progress(vid.currentTime / vid.duration);
@@ -85,17 +97,37 @@
 
     function fireQuestion() {
         var time = Math.floor(vid.currentTime);
-        console.log(time);
-        if (time == 10) {
-            vid.pause();
-            q.style.display='block';
-            vid.currentTime = 11;
-        }
-        if (time == 46) {
-            vid.pause();
-            alert("This is a question");
-            vid.currentTime = 47;
-            playVid();
+        var options = document.getElementById('choices');
+        var choices = [];
+        switch (time) {
+            case 10:
+                vid.pause();
+                q.style.display = 'block';
+                qTitle.innerText = 'Question 1';
+                qQuestion.innerText = 'Which Robot won the last round?';
+                choices.push("<input type='radio' id='q1a' name='q'>Red<br>");
+                choices.push("<input type='radio' id='q1b' name='q'>Blue<br>");
+                var temp = choices.join('');
+                options.innerHTML = temp;
+                submit.onclick = function() {q1()};
+                vid.currentTime = 11;
+                choices = [];
+                break;
+            case 46:
+                vid.pause();
+                q.style.display = 'block';
+                qTitle.innerText = 'Quesiton 2';
+                qQuestion.innerText = 'What coloured hat is the red boxers operator wearing?';
+                choices.push("<input type='radio' id='q2a' name='q'>White<br>");
+                choices.push("<input type='radio' id='q2b' name='q'>Red<br>");
+                choices.push("<input type='radio' id='q2c' name='q'>Grey<br>");
+                choices.push("<input type='radio' id='q2d' name='q'>Black<br>");
+                var temp = choices.join('');
+                options.innerHTML = temp;
+                submit.onclick = function() {q2()};
+                vid.currentTime = 47;
+                choices = [];
+                break;
         }
     }
 
@@ -104,12 +136,24 @@
         bar.style.width = (complete * 100) + "%";
 
     }
-    function q1(answer){
-        var answer = document.getElementById('b').checked;
-        console.log(answer);
-        if(answer){playVid();}
-        else{alert("Incorrect, Please try again.")}
+
+    function q1() {
+        var answer = document.getElementById('q1b').checked;
+        if (answer) {
+            playVid();
+        } else {
+            alert("Incorrect, Please try again.")
+        }
     }
-    
+    function q2(){
+        var answer = document.getElementById('q2c').checked;
+        console.log(answer);
+        if (answer) {
+            playVid();
+        }
+        else{
+            alert('Please try again.');
+        }
+    }
 </script>
 </html>
